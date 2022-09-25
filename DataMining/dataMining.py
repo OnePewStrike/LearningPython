@@ -38,7 +38,6 @@ def solveByAverage():
             average += float(row[0])
             count += 1
         average = average / count
-        print("Total is ", average)
 
         for row in csv_reader:
             if row[0] == '':
