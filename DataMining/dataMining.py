@@ -1,4 +1,5 @@
 import csv
+import pandas as pd
 
 
 def viewOriginalData():
@@ -27,18 +28,21 @@ def solveByRemoveRows():
 
 def solveByAverage():
     L = []
-    total = None
+    average = 0.0
+    count = 0
     with open('data.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
 
+        next(csv_reader)
         for row in csv_reader:
-            header = next(csv_reader)
-            total = int(row[0])
-        print("\n\tThe total is {}", total)
+            average += float(row[0])
+            count += 1
+        average = average / count
+        print("Total is ", average)
 
         for row in csv_reader:
             if row[0] == '':
-                continue
+                L.append(average)
             else:
                 L.append(row)
 
@@ -47,4 +51,4 @@ def solveByAverage():
             csv_writer.writerows(L)
 
 
-solveByRemoveRows()
+solveByAverage()
