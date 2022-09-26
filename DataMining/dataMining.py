@@ -54,9 +54,9 @@ def solveByAverage():
             if row[2] == '': 
                 row[2] = X3
             if row[3] == '': 
-                 row[3] = X4
+                row[3] = X4
             if row[4] == '': 
-                  row[4] = Y
+                row[4] = Y
             else: 
                 L.append(row) 
   
@@ -71,7 +71,7 @@ def getAverage(index):
     count = 0
     with open('data.csv', 'r') as csv_file: 
         csv_reader = csv.reader(csv_file) 
-        
+
         next(csv_reader) 
         for row in csv_reader: 
             if row[0] == '' or row[1] == '' or row[2] == '' or row[3] == '' or row[4] == '': 
@@ -107,64 +107,75 @@ def solveByGlobalConstant():
              csv_writer = csv.writer(new_file, delimiter=",") 
              csv_writer.writerows(L)
  
-def solveByLinearInter():  
+def solveByLinearInterpolation():  
     L = [] 
-    prev = 0
-    next = 0
+    prev = 0.0
+    after = 0.0
     mean = 0.0
+    isFound = False
     
     with open('data.csv', 'r') as csv_file: 
         csv_reader = csv.reader(csv_file) 
-  
+
+        next(csv_reader) 
         for row in csv_reader: 
-            if row[0] == '':
-                next(csv_reader)
-                next = float(row[0])
-                mean = (next + prev) / 2
-                L.append(mean)
+            if row[1] == '':
+                print("\n\tCheck: ", row[1], prev)
+                mean = (after + prev) / 2
+                row[1] = str(mean)
+                print("Check mean: ", mean)
                 break
+
             else:
-                L.append(row[0])
-            prev = float(row[0])
+                L.append(row)
+            prev = float(row[1])
         
             with open("new_data_format.csv", 'w') as new_file: 
              csv_writer = csv.writer(new_file, delimiter=",") 
              csv_writer.writerows(L)
 
 def showMenuOptions():
-    print("\n\tMain Menu")
-    print("\t1. Show original data")
-    print("\t2. Solve by removing rows with missing data")
-    print("\t3. Solve by average")
-    print("\t4. Solve by linear interpolation")
-    print("\t5. Solve by global constant")
-    print("\t6. Exit")
-    x = int(input("\tUser choice: "))
+    print("\nMain Menu")
+    print("1. Show original data")
+    print("2. Show formatted data")
+    print("3. Solve by removing rows with missing data")
+    print("4. Solve by average")
+    print("5. Solve by linear interpolation")
+    print("6. Solve by global constant")
+    print("7. Exit")
+    x = int(input("User choice: "))
     return x
 
 
-solveByAverage()
-
-# while True:   
-#     choice = int(showMenuOptions())
-#     if (choice == 1):
-#         # viewOriginalData()
-#         continue
-#     elif (choice == 2):
-#         # solveByRemoveRows()
-#         continue
-#     elif (choice == 3):
-#         # solveByAverage()
-#         continue
-#     elif (choice == 4):
-#         # solveByLinearInter()
-#         continue
-#     elif (choice == 5):
-#         # solveByGlobalConstant()
-#         continue
-#     elif (choice == 6):
-#         break
-#     else:
-#         print("\tError: choice does not exist...")
-#         continue
-# print("\tEnd of progtam")
+while True:   
+    choice = int(showMenuOptions())
+    if (choice == 1):
+        viewOriginalData()
+        input("Enter to continue..")
+        continue
+    elif (choice == 2):
+        viewFormattedData()
+        input("Enter to continue..")
+        continue
+    elif (choice == 3):
+        solveByRemoveRows()
+        input("Enter to continue..")
+        continue
+    elif (choice == 4):
+        solveByAverage()
+        input("Enter to continue..")
+        continue
+    elif (choice == 5):
+        solveByLinearInter()
+        input("Enter to continue..")
+        continue
+    elif (choice == 6):
+        solveByGlobalConstant()
+        input("Enter to continue..")
+        continue
+    elif (choice == 7):
+        break
+    else:
+        print("\tError: choice does not exist...")
+        continue
+print("\tEnd of program")
