@@ -1,5 +1,6 @@
+# Name: Rual Godwin C. Duliente
+# Subject: Data Mining
 import csv
-from csv import DictReader
 
 
 def viewOriginalData():
@@ -25,7 +26,7 @@ def solveByRemoveRows():
         csv_reader = csv.reader(csv_file)
 
         for row in csv_reader:
-            for index in range(0, 4):
+            for index in range(0, 5):
                 if row[index] == '':
                     isFound = True
             if not isFound:
@@ -44,7 +45,7 @@ def solveByAverage():
         csv_reader = csv.reader(csv_file)
 
         for row in csv_reader:
-            for index in range(0, 4):
+            for index in range(0, 5):
                 if row[index] == '':
                     row[index] = str(getAverage(index))
             L.append(row)
@@ -63,13 +64,13 @@ def getAverage(index):
 
         next(csv_reader)
         for row in csv_reader:
-            for index in range(0, 4):
-                if (row[index] == ''):
-                    continue
+            if (row[index] == ''):
+                continue
             average += float(row[index])
             count += 1
         total = average / count
-    return str(total)
+        total_convert = "{:.2f}".format(total)
+    return str(total_convert)
 
 
 def solveByGlobalConstant():
@@ -78,7 +79,7 @@ def solveByGlobalConstant():
         csv_reader = csv.reader(csv_file)
 
         for row in csv_reader:
-            for index in range(0, 4):
+            for index in range(0, 5):
                 if row[index] == '':
                     row[index] = '0'
             L.append(row)
@@ -99,12 +100,11 @@ def solveByLinearInterpolation():
     with open('data.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
 
-        next(csv_reader)
         for row in csv_reader:
-            for index in range(0, 4):
+            for index in range(0, 5):
                 if row[index] == '':
                     target_row = row
-                    L.append(solveIndex(
+                    L.append(solveTargetIndex(
                         index, prev_row, target_row, position))
                     isFound = True
             if isFound:
@@ -120,7 +120,7 @@ def solveByLinearInterpolation():
             csv_writer.writerows(L)
 
 
-def solveIndex(index, prev_row, target_row, position):
+def solveTargetIndex(index, prev_row, target_row, position):
     initial = 0
     prev = 0.0
     after = 0.0
