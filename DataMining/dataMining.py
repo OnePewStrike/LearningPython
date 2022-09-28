@@ -1,138 +1,138 @@
-import csv 
-  
-  
-def viewOriginalData(): 
-    with open('data.csv', 'r') as csv_file: 
-        csv_reader = csv.reader(csv_file) 
-  
-        for row in csv_reader: 
-            print(row) 
+import csv
+from csv import DictReader
+
+
+def viewOriginalData():
+    with open('data.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+
+        for row in csv_reader:
+            print(row)
+
 
 def viewFormattedData():
-    with open('new_data_format.csv', 'r') as csv_file: 
-        csv_reader = csv.reader(csv_file) 
-  
-        for row in csv_reader: 
-            print(row)
-  
-  
-def solveByRemoveRows(): 
-    L = [] 
-    with open('data.csv', 'r') as csv_file: 
+    with open('new_data_format.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
-  
-        for row in csv_reader: 
-            if row[1] == '' or row[2] == '' or row[3] == '' or row[4] == '': 
-                continue 
-            else: 
-                L.append(row) 
-  
-        with open("new_data_format.csv", 'w') as new_file: 
-            csv_writer = csv.writer(new_file, delimiter=",") 
-            csv_writer.writerows(L) 
+
+        for row in csv_reader:
+            print(row)
 
 
-  
+def solveByRemoveRows():
+    L = []
+    isFound = False
+    with open('data.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
 
-def solveByAverage(): 
-    L = [] 
-     
-    with open('data.csv', 'r') as csv_file: 
-        csv_reader = csv.reader(csv_file) 
-  
-        X1 = str(getAverage(0))
-        X2 = str(getAverage(1))
-        X3 = str(getAverage(2))
-        X4 = str(getAverage(3))
-        Y = str(getAverage(4))
-         
-        for row in csv_reader: 
-            if row[0] == '': 
-                row[0] = X1
-            if row[1] == '': 
-                row[1] = X2
-            if row[2] == '': 
-                row[2] = X3
-            if row[3] == '': 
-                row[3] = X4
-            if row[4] == '': 
-                row[4] = Y
-            else: 
-                L.append(row) 
-  
-        with open("new_data_format.csv", 'w') as new_file: 
-            csv_writer = csv.writer(new_file, delimiter=",") 
-            csv_writer.writerows(L)     
-  
+        for row in csv_reader:
+            for index in range(0, 4):
+                if row[index] == '':
+                    isFound = True
+            if not isFound:
+                L.append(row)
+            isFound = False
+
+        with open("new_data_format.csv", 'w') as new_file:
+            csv_writer = csv.writer(new_file, delimiter=",")
+            csv_writer.writerows(L)
+
+
+def solveByAverage():
+    L = []
+
+    with open('data.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+
+        for row in csv_reader:
+            for index in range(0, 4):
+                if row[index] == '':
+                    row[index] = str(getAverage(index))
+            L.append(row)
+
+        with open("new_data_format.csv", 'w') as new_file:
+            csv_writer = csv.writer(new_file, delimiter=",")
+            csv_writer.writerows(L)
+
 
 def getAverage(index):
     average = 0.0
     total = 0.0
     count = 0
-    with open('data.csv', 'r') as csv_file: 
-        csv_reader = csv.reader(csv_file) 
+    with open('data.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
 
-        next(csv_reader) 
-        for row in csv_reader: 
-            if row[0] == '' or row[1] == '' or row[2] == '' or row[3] == '' or row[4] == '': 
-                continue 
+        next(csv_reader)
+        for row in csv_reader:
+            for index in range(0, 4):
+                if (row[index] == ''):
+                    continue
             average += float(row[index])
             count += 1
-        total = average / count 
+        total = average / count
     return str(total)
-    
-def solveByGlobalConstant(): 
-    L = [] 
-    with open('data.csv', 'r') as csv_file: 
-        csv_reader = csv.reader(csv_file) 
-  
-        for row in csv_reader: 
-            if row[0] == '': 
-                row[0] = '0'
-            if row[1] == '': 
-                row[1] = '0'
-            if row[2] == '': 
-                row[2] = '0'
-            if row[3] == '': 
-                row[3] = '0'
-            if row[4] == '': 
-                row[4] = '0'
-            else: 
-                L.append(row) 
-  
+
+
+def solveByGlobalConstant():
+    L = []
+    with open('data.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+
+        for row in csv_reader:
+            for index in range(0, 4):
+                if row[index] == '':
+                    row[index] = '0'
+            L.append(row)
+
         for row in csv_reader:
             print(row[0])
 
-        with open("new_data_format.csv", 'w') as new_file: 
-             csv_writer = csv.writer(new_file, delimiter=",") 
-             csv_writer.writerows(L)
- 
-def solveByLinearInterpolation():  
-    L = [] 
+        with open("new_data_format.csv", 'w') as new_file:
+            csv_writer = csv.writer(new_file, delimiter=",")
+            csv_writer.writerows(L)
+
+
+def solveByLinearInterpolation():
+    L = []
     prev = 0.0
     after = 0.0
     mean = 0.0
     isFound = False
-    
-    with open('data.csv', 'r') as csv_file: 
-        csv_reader = csv.reader(csv_file) 
+    isNext = False
 
-        next(csv_reader) 
-        for row in csv_reader: 
-            if row[1] == '':
-                print("\n\tCheck: ", row[1], prev)
+    with open('data.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+
+        next(csv_reader)
+        for row in csv_reader:
+            if (isNext == True):
+                after = float(row[index])
+                print("CHECK: ", index)
                 mean = (after + prev) / 2
-                row[1] = str(mean)
-                print("Check mean: ", mean)
-                break
-
+                prev_row[index] = str(mean)
+                print("CHECK: ", after, prev, mean)
+                input("Enter to continue..")
+                L.append(prev_row)
+                L.append(row)
+                isNext = False
             else:
                 L.append(row)
-            prev = float(row[1])
-        
-            with open("new_data_format.csv", 'w') as new_file: 
-             csv_writer = csv.writer(new_file, delimiter=",") 
-             csv_writer.writerows(L)
+                isNext = False
+            for index in range(0, 4):
+                if row[index] == '':
+                    print("CHECK: ", index)
+                    isFound = True
+                    break
+            if (isFound == True):
+                isNext = True
+                isFound = False
+                continue
+            prev_row = row
+            prev = float(prev_row[index])
+
+        with open("new_data_format.csv", 'w') as new_file:
+            csv_writer = csv.writer(new_file, delimiter=",")
+            csv_writer.writerows(L)
+
 
 def showMenuOptions():
     print("\nMain Menu")
@@ -147,7 +147,7 @@ def showMenuOptions():
     return x
 
 
-while True:   
+while True:
     choice = int(showMenuOptions())
     if (choice == 1):
         viewOriginalData()
@@ -166,7 +166,7 @@ while True:
         input("Enter to continue..")
         continue
     elif (choice == 5):
-        solveByLinearInter()
+        solveByLinearInterpolation()
         input("Enter to continue..")
         continue
     elif (choice == 6):
