@@ -93,45 +93,54 @@ def solveByGlobalConstant():
 
 def solveByLinearInterpolation():
     L = []
-    prev = 0.0
-    after = 0.0
-    mean = 0.0
     isFound = False
-    isNext = False
+    position = 1
 
     with open('data.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
 
         next(csv_reader)
         for row in csv_reader:
-            if (isNext == True):
-                after = float(row[index])
-                print("CHECK: ", index)
-                mean = (after + prev) / 2
-                prev_row[index] = str(mean)
-                print("CHECK: ", after, prev, mean)
-                input("Enter to continue..")
-                L.append(prev_row)
-                L.append(row)
-                isNext = False
-            else:
-                L.append(row)
-                isNext = False
             for index in range(0, 4):
                 if row[index] == '':
-                    print("CHECK: ", index)
+                    target_row = row
+                    L.append(solveIndex(
+                        index, prev_row, target_row, position))
                     isFound = True
-                    break
-            if (isFound == True):
-                isNext = True
+            if isFound:
                 isFound = False
+                position += 1
                 continue
+            L.append(row)
             prev_row = row
-            prev = float(prev_row[index])
+            position += 1
 
         with open("new_data_format.csv", 'w') as new_file:
             csv_writer = csv.writer(new_file, delimiter=",")
             csv_writer.writerows(L)
+
+
+def solveIndex(index, prev_row, target_row, position):
+    initial = 0
+    prev = 0.0
+    after = 0.0
+    mean = 0.0
+    with open('data.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+
+        next(csv_reader)
+        for row in csv_reader:
+            if (position != initial):
+                initial += 1
+                continue
+            else:
+                after = float(row[index])
+                prev = float(prev_row[index])
+                mean = (after + prev) / 2
+                format_mean = "{:.2f}".format(mean)
+                target_row[index] = format_mean
+                temp = target_row
+                return temp
 
 
 def showMenuOptions():
@@ -176,6 +185,32 @@ while True:
     elif (choice == 7):
         break
     else:
-        print("\tError: choice does not exist...")
+        print("\tError: choice does not exist... Try again")
         continue
 print("\tEnd of program")
+
+# with open('data.csv', 'r') as csv_file:
+#     csv_reader = csv.reader(csv_file)
+
+#      next(csv_reader)
+#       for row in csv_reader:
+#            for index in range(0, 4):
+#                 if row[index] == '':
+#                     target_row = row
+#                     temp.append(solveTargetIndex(
+#                         index, prev_row, target_row, position))
+#                     isFound = True
+#                     continue
+#                 else:
+#                     temp.append(row[index])
+#                     print("CHECK TEMP: ", temp)
+#             if isFound:
+#                 temp = []
+#                 L.append(temp)
+#                 isFound = False
+#                 position += 1
+#                 continue
+#             else:
+#                 L.append(row)
+#                 prev_row = row
+#                 position += 1
