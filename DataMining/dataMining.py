@@ -94,6 +94,8 @@ def solveByGlobalConstant():
 
 def solveByLinearInterpolation():
     L = []
+    temp = []
+    isNext = False
     isFound = False
     position = 1
 
@@ -104,13 +106,11 @@ def solveByLinearInterpolation():
             for index in range(0, 5):
                 if row[index] == '':
                     target_row = row
-                    L.append(solveTargetIndex(
+                    temp.append(solveTargetIndex(
                         index, prev_row, target_row, position))
-                    isFound = True
-            if isFound:
-                isFound = False
-                position += 1
-                continue
+                else:
+                    temp.append(row[index])
+            temp = []
             L.append(row)
             prev_row = row
             position += 1
@@ -118,6 +118,8 @@ def solveByLinearInterpolation():
         with open("new_data_format.csv", 'w') as new_file:
             csv_writer = csv.writer(new_file, delimiter=",")
             csv_writer.writerows(L)
+                
+    
 
 
 def solveTargetIndex(index, prev_row, target_row, position):
@@ -140,7 +142,7 @@ def solveTargetIndex(index, prev_row, target_row, position):
                 format_mean = "{:.2f}".format(mean)
                 target_row[index] = format_mean
                 temp = target_row
-                return temp
+                return format_mean
 
 
 def showMenuOptions():
@@ -189,28 +191,7 @@ while True:
         continue
 print("\tEnd of program")
 
-# with open('data.csv', 'r') as csv_file:
-#     csv_reader = csv.reader(csv_file)
-
-#      next(csv_reader)
-#       for row in csv_reader:
-#            for index in range(0, 4):
-#                 if row[index] == '':
-#                     target_row = row
-#                     temp.append(solveTargetIndex(
-#                         index, prev_row, target_row, position))
-#                     isFound = True
-#                     continue
-#                 else:
-#                     temp.append(row[index])
-#                     print("CHECK TEMP: ", temp)
-#             if isFound:
-#                 temp = []
-#                 L.append(temp)
-#                 isFound = False
-#                 position += 1
-#                 continue
-#             else:
-#                 L.append(row)
-#                 prev_row = row
-#                 position += 1
+            # if isFound:
+            #     isFound = False
+            #     position += 1
+            #     continue
