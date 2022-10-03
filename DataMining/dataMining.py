@@ -84,9 +84,6 @@ def solveByGlobalConstant():
                     row[index] = '0'
             L.append(row)
 
-        for row in csv_reader:
-            print(row[0])
-
         with open("new_data_format.csv", 'w') as new_file:
             csv_writer = csv.writer(new_file, delimiter=",")
             csv_writer.writerows(L)
@@ -95,8 +92,6 @@ def solveByGlobalConstant():
 def solveByLinearInterpolation():
     L = []
     temp = []
-    isNext = False
-    isFound = False
     position = 1
 
     with open('data.csv', 'r') as csv_file:
