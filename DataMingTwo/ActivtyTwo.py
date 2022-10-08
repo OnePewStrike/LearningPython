@@ -19,6 +19,8 @@ def binByWidth(data, k):
         arr = arr + [minData + w * i]
     arri = []
 
+    print("Check: ", arr)
+
     for i in range(0, k):
         temp = []
         for j in data:
