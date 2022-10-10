@@ -24,11 +24,11 @@ def binByWidth(data, k):
 
     binResult = []
     for i in range(0, k):
-        temp =[]
+        bin =[]
         for j in data:
             if (j <= binIndex[i+1] and j >= binIndex[i]):
-                temp.append(j)
-        binResult.append(temp)
+                bin.append(j)
+        binResult.append(bin)
     return binResult
 
 
@@ -39,8 +39,56 @@ def binByFrequency(data, k):
 
     binResult = []
     for i in range(0, k):
+        bin = []
+        for j in range(0, w):
+            if (pos >= length):
+                break
+            elif (j >= length):
+                break
+            else:
+                bin.append(data[pos])
+                pos += 1
+        binResult.append(bin)
+    return binResult
+
+def binByMeans(data, k):
+    length = len(data)
+    w = math.ceil(length / k)
+    pos = 0
+    
+    binResult = []
+    for i in range(0, k):
+        total = 0
+        size = 0
+        bin = []
+        for j in range(0, w):
+            if (pos >= length):
+                break
+            elif (j >= length):
+                break
+            else:
+                total += data[pos]
+                pos += 1
+                size += 1
+        total /= size
+        print(total)
+
+        for k in range(0, w):
+            bin.append(int(total))
+        binResult.append(bin)
+    return binResult
+
+def binByBoundary(data, k):
+    length = len(data)
+    w = math.ceil(length / k)
+    pos = 0
+    
+    binResult = []
+    for i in range(0, k):
+        lowest = 0
+        highest = 0
         temp = []
-        for j in range(0, k):
+        for j in range(0, w):
             if (pos >= length):
                 break
             elif (j >= length):
@@ -48,7 +96,15 @@ def binByFrequency(data, k):
             else:
                 temp.append(data[pos])
                 pos += 1
-        binResult.append(temp)
+        lowest = min(temp)
+        highest = max(temp)
+        print("Check : ", lowest, highest)
+        
+        bin = []
+        for k in range(0, w-1):
+            bin.append(lowest)
+        bin.append(highest)
+        binResult.append(bin)
     return binResult
 
 def showMenuOptions():
@@ -58,7 +114,9 @@ def showMenuOptions():
     print("3. Display result")
     print("4. Bin data using width")
     print("5. Bin data using frequency")
-    print("6. Exit")
+    print("6. Bin smooth data by means")
+    print("7. Bin smooth data by boundary")
+    print("8. Exit")
     choice = int(input("Enter choice : "))
     return choice
 
@@ -66,7 +124,7 @@ def inputWidth():
     width = int(input("\nEnter bin width : "))
     return width
 
-data = [0, 4, 12, 16, 18, 24, 26, 28]
+data = [3, 7, 8, 13, 22, 22, 22, 26, 26, 28, 30, 37]
 k = 3
 binResult = []
 
@@ -89,6 +147,14 @@ while True:
         binResult = binByFrequency(data, k)
         continue
     elif (choice == 6):
+        k = inputWidth()
+        binResult = binByMeans(data, k)
+        continue
+    elif (choice == 7):
+        k = inputWidth()
+        binResult = binByBoundary(data, k)
+        continue
+    elif (choice == 8):
         break
     else:
         print("\nError: The choice does not exist... try again.")
