@@ -31,7 +31,6 @@ def binByWidth(data, k):
         binResult.append(bin)
     return binResult
 
-
 def binByFrequency(data, k):
     length = len(data)
     w = math.ceil(length / k)
@@ -87,6 +86,7 @@ def binByBoundary(data, k):
     for i in range(0, k):
         lowest = 0
         highest = 0
+        
         temp = []
         for j in range(0, w):
             if (pos >= length):
@@ -98,14 +98,22 @@ def binByBoundary(data, k):
                 pos += 1
         lowest = min(temp)
         highest = max(temp)
-        print("Check : ", lowest, highest)
         
         bin = []
         for k in range(0, w-1):
             bin.append(lowest)
         bin.append(highest)
+        
         binResult.append(bin)
     return binResult
+
+def binByMedian(data, k):
+    length = len(data)
+    w = math.ceil(length / k)
+    pos = 0
+    
+    binResult = []
+    
 
 def showMenuOptions():
     print("\nMain Menu")
