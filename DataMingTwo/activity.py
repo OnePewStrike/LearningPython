@@ -1,6 +1,23 @@
 import math
 
 
+def inputData():
+    data = []
+
+    data = list(map(int, input("Enter the list of data : ").split()))
+    return data
+
+
+def displayData(data):
+    print(data)
+    return
+
+
+def displayResult(res):
+    print(res)
+    return
+
+
 def newDataEntry():
     data = []
 
@@ -67,29 +84,54 @@ def showMenuOptions():
     return choice
 
 
+def showMenuOptions():
+    print("\nMain Menu")
+    print("1. Enter new data")
+    print("2. Display data")
+    print("3. Display result")
+    print("4. Bin data using width")
+    print("5. Bin data using frequency")
+    print("6. Bin smooth data by means")
+    print("7. Bin smooth data by boundary")
+    print("8. Exit")
+    choice = int(input("Enter choice : "))
+    return choice
+
+
 data = [13, 15, 16, 16, 17, 19, 20, 21, 22, 25, 30, 33, 35, 36, 40]
 result = []
+
+data = [3, 7, 8, 13, 22, 22, 22, 26, 26, 28, 30, 37]
+k = 3
+binResult = []
 
 while True:
     choice = showMenuOptions()
     if (choice == 1):
-        data = newDataEntry()
+        data = inputData()
         continue
     elif (choice == 2):
         displayData(data)
         continue
     elif (choice == 3):
-        displayResult(result)
-        continue
+        displayResult(binResult)
     elif (choice == 4):
-        k = int(input("Enter the bin size : "))
-        result = binByWidth(data, k)
+        k = inputWidth()
+        binResult = binByWidth(data, k)
         continue
     elif (choice == 5):
-        k = int(input("Enter the bin size : "))
-        result = binByFrequency(data, k)
+        k = inputWidth()
+        binResult = binByFrequency(data, k)
         continue
     elif (choice == 6):
+        k = inputWidth()
+        binResult = binByMeans(data, k)
+        continue
+    elif (choice == 7):
+        k = inputWidth()
+        binResult = binByBoundary(data, k)
+        continue
+    elif (choice == 8):
         break
     else:
         print("\nError: The choice does not exist... try again.")
