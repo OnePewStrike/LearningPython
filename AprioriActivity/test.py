@@ -84,4 +84,16 @@ for key in triple_counts:
 
 # for entry in sorted_triples:
 #   print('{0}: {1}'.format(entry[0], entry[1]))
-print(frequent_triples)
+# print(sorted_triples)
+
+# for key, value in sorted(triple_counts.items()):
+#   if value > THRESHOLD:
+#     print(key, value)
+
+# for key, value in sorted(pair_counts.items()):
+#   if value > THRESHOLD:
+#     print(key, value)
+
+for key, value in sorted(item_counts.items()):
+  if value > THRESHOLD:
+    print(key, value)

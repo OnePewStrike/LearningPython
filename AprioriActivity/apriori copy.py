@@ -1,7 +1,3 @@
-# Name : Rual Godwin C. Duliente
-# Activity: Association Rule Mining, The Apriori Algorithm
-# Market Basket Analysis ~ source data-set: https://www.kaggle.com/datasets/irfanasrullah/groceries
-
 import csv
 from collections import defaultdict
 
@@ -20,12 +16,12 @@ def showMenuOptions():
 
 
 def inputMinSup():
-    sup = input("\nPlease enter sup threshold (e.g., 20, 50, 110) : ")
+    sup = input("\nPlease enter sup threshold (e.g., 50) : ")
     return int(sup)
 
 
 def inputMinConf():
-    conf = input("\nPlease enter confidence threshold (e.g., 20, 50, 110) : ")
+    conf = input("\nPlease enter confidence threshold (e.g., 50) : ")
     return int(conf)
 
 
@@ -36,7 +32,6 @@ def viewOriginalData():
         next(csv_reader)
         for row in csv_reader:
             print(row)
-    print("\nsource data-set: https://www.kaggle.com/datasets/irfanasrullah/groceries")
 
 
 def readData():
@@ -54,8 +49,7 @@ def displayItemCount(data):
         for item in x.split():
             item_counts[item] += 1
 
-    for key, value in sorted(item_counts.items()):
-        print(key, value)
+    print(item_counts)
 
 
 # Sort pair sets such as (a,b) is the same as (b,a)
@@ -100,10 +94,17 @@ def secondIteration(data, threshold):
             for set_two in range(set_one + 1, len(items)):
                 if items[set_two] not in frequent_items:
                     continue
+                # sort (a,b) is the same as (b, a)
                 pair = sort_group(items[set_one], items[set_two])
                 pair_counts[pair] += 1
 
     return pair_counts
+
+    frequent_pairs = set()
+    for key in pair_counts:
+        if pair_counts[key] > threshold:
+            frequent_pairs.add(key)
+    return frequent_pairs
 
 
 # Filter for Frequent Item Set Three
@@ -144,10 +145,20 @@ def thirdIteration(data, threshold):
                         items[set_one], items[set_two], items[set_three])
                     triple_counts[triple] += 1
 
+    # frequent_triples = set()
+    # for key in triple_counts:
+    #     if triple_counts[key] > threshold:
+    #         frequent_triples.add(key)
+
     return triple_counts
+    for key, value in sorted(triple_counts.items()):
+        if value > threshold:
+            print(key, value)
+
+    return
 
 
-def displayFreqItemSet(item_count, threshold):
+def displayItemSet(item_count, threshold):
     for key, value in sorted(item_count.items()):
         if value > threshold:
             print(key, value)
@@ -166,19 +177,19 @@ def main():
             displayItemCount(data)
             continue
         elif (choice == 3):
-            minSup = inputMinSup()
-            freqItemSet = firstIteration(data, minSup)
-            displayFreqItemSet(freqItemSet, minSup)
+            minConf = inputMinConf()
+            freqItemSet = firstIteration(data, minConf)
+            displayItemSet(freqItemSet, minConf)
             continue
         elif (choice == 4):
-            minSup = inputMinSup()
-            freqItemSet = secondIteration(data, minSup)
-            displayFreqItemSet(freqItemSet, minSup)
+            minConf = inputMinConf()
+            freqItemSet = secondIteration(data, minConf)
+            displayItemSet(freqItemSet, minConf)
             continue
         elif (choice == 5):
-            minSup = inputMinSup()
-            freqItemSet = thirdIteration(data, minSup)
-            displayFreqItemSet(freqItemSet, minSup)
+            minConf = inputMinConf()
+            freqItemSet = thirdIteration(data, minConf)
+            displayItemSet(freqItemSet, minConf)
             continue
         elif (choice == 6):
             continue
