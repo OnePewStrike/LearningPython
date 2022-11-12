@@ -20,12 +20,12 @@ def showMenuOptions():
 
 
 def inputMinSup():
-    sup = input("\nPlease enter sup threshold (e.g., 20, 50, 110) : ")
+    sup = input("\nPlease enter sup threshold (e.g., 20, 50, 70) : ")
     return int(sup)
 
 
 def inputMinConf():
-    conf = input("\nPlease enter confidence threshold (e.g., 20, 50, 110) : ")
+    conf = input("\nPlease enter confidence threshold (e.g., 20, 50, 70) : ")
     return int(conf)
 
 
@@ -71,7 +71,7 @@ def generate_pairs(*args):
     return pairs
 
 
-# Filter for Frequent Item Set One
+# Create Item Set One
 def firstIteration(data, threshold):
     item_counts = defaultdict(int)
 
@@ -82,16 +82,18 @@ def firstIteration(data, threshold):
     return item_counts
 
 
-# Filter for Frequent Item Set Two
+# Create Item Set Two
 def secondIteration(data, threshold):
     pair_counts = defaultdict(int)
     item_counts = firstIteration(data, threshold)
 
+    # Filter Frequent Item Set One
     frequent_items = set()
     for key in item_counts:
         if item_counts[key] > threshold:
             frequent_items.add(key)
 
+    # Filter Frequent Item Set Two
     for x in data:
         items = x.split()
         for set_one in range(len(items) - 1):
@@ -106,17 +108,19 @@ def secondIteration(data, threshold):
     return pair_counts
 
 
-# Filter for Frequent Item Set Three
+# Create Item Set Three
 def thirdIteration(data, threshold):
     triple_counts = defaultdict(int)
     item_counts = firstIteration(data, threshold)
     pair_counts = secondIteration(data, threshold)
 
+    # Filter Frequent Item Set One
     frequent_items = set()
     for key in item_counts:
         if item_counts[key] > threshold:
             frequent_items.add(key)
 
+    # Filter Frequent Item Set Two
     frequent_pairs = set()
     for key in pair_counts:
         if pair_counts[key] > threshold:
@@ -153,6 +157,15 @@ def displayFreqItemSet(item_count, threshold):
             print(key, value)
 
 
+def generateAssociationRules(triple_counts, threshold):
+    frequent_triples = set()
+    for key in triple_counts:
+        if triple_counts[key] > threshold:
+            frequent_triples.add(key)
+
+    print(frequent_triples)
+
+
 def main():
     data = readData()
     freqItemSet = set()
@@ -181,6 +194,9 @@ def main():
             displayFreqItemSet(freqItemSet, minSup)
             continue
         elif (choice == 6):
+            minSup = inputMinSup()
+            freqItemSet = thirdIteration(data, minSup)
+            generateAssociationRules(freqItemSet, minSup)
             continue
         elif (choice == 7):
             break
