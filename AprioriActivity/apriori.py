@@ -126,6 +126,7 @@ def thirdIteration(data, threshold):
         if pair_counts[key] > threshold:
             frequent_pairs.add(key)
 
+    # Filter for Item Set Three
     for x in data:
         items = x.split()
         for set_one in range(len(items) - 1):
