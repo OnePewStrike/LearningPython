@@ -2,6 +2,7 @@ import os
 import math
 from itertools import combinations
 from collections import Counter
+from collections import defaultdict
 # Name : Rual Godwin C. Duliente
 # Assignment Activity: Association Rule Mining, The Apriori Algorithm
 
@@ -13,8 +14,9 @@ def showMenuOptions():
     print("3. Display Second Iteration")
     print("4. Display Third Iteration")
     print("5. Display All Iterations")
-    print("6. Display Candidate Rules")
-    print("7. Exit")
+    print("6. Display Candidate Rule and Apriori Result")
+    print("7. Display All (Iteration, Candidate rule and Apriori Result)")
+    print("8. Exit")
     choice = int(input("Enter choice: "))
     return choice
 
@@ -37,12 +39,10 @@ def inputMinSup(data_set):
     return threshold
 
 
-# def inputMinConf(data_set):
-#     confidence = float(input(
-#         "\nPlease enter support threshold (e.g., 0.2, 0.4, 0.9) : "))
-#     threshold = math.ceil(float(confidence*len(data_set)))
-
-#     return threshold
+def inputMinConf():
+    conf = float(
+        input("\nPlease enter confidence threshold (e.g., 0.2, 0.4, 0.9) : "))
+    return conf
 
 
 # Generate First Item Set and Frequent Set
@@ -138,36 +138,53 @@ def displayIteration(item_set, freq_set, num):
 
 
 def generateCandidateRules(freq_set_three, data_set):
-    print("\nCandidate Rules : ")
-    for item in freq_set_three:
-        rules_set = [frozenset(row) for row in combinations(item, len(item)-1)]
-        mmax = 0
-        for a in rules_set:
-            b = item-a
-            ab = item
-            sab = 0
-            sa = 0
-            sb = 0
-            print(a)
-            input()
-            print(b)
-            input()
+    rules = defaultdict(float)
+    for freq_item in freq_set_three:
+        candidates_set = [frozenset(row)
+                          for row in combinations(freq_item, len(freq_item)-1)]
+        for candidates_one in candidates_set:
+            candidates_two = freq_item-candidates_one
+            candidate = freq_item
+            candidate_count = 0
+            count_one = 0
+            count_two = 0
             for row in data_set:
-                temp = set(row[1])
-                if (a.issubset(temp)):
-                    sa += 1
-                if (b.issubset(temp)):
-                    sb += 1
-                if (ab.issubset(temp)):
-                    sab += 1
-            temp = sab/sa*100
-            if (temp > mmax):
-                mmax = temp
-            temp = sab/sb*100
-            if (temp > mmax):
-                mmax = temp
-            print(str(list(a))+" -> "+str(list(b))+" = "+str(sab/sa*100)+"%")
-            print(str(list(b))+" -> "+str(list(a))+" = "+str(sab/sb*100)+"%")
+                data = set(row[1])
+                if candidates_one.issubset(data):
+                    count_one += 1
+                if candidates_two.issubset(data):
+                    count_two += 1
+                if candidate.issubset(data):
+                    candidate_count += 1
+
+            output_one = float(str(candidate_count/count_one))
+            cand_one = str(list(candidates_one)) + " -> " + \
+                str(list(candidates_two))
+            rules[cand_one] += output_one
+
+            output_two = float(str(candidate_count/count_two))
+            cand_two = str(list(candidates_two)) + " -> " + \
+                str(list(candidates_one))
+            rules[cand_two] += output_two
+
+    return rules
+
+
+def displayAssociationRules(candidate_rules, threshold):
+    print("\nCandidate Rules : ")
+    for key, value in sorted(candidate_rules.items()):
+        print(key, " : ", value, "~~ ", value*100, "%")
+
+    print("\nApriori result: ")
+    for key, value in sorted(candidate_rules.items()):
+        if value > threshold:
+            print(key, " : ", value, "~~ ", value*100, "%")
+
+
+def displayDataSet(data_set):
+    print("\n")
+    for row in data_set:
+        print(row[0], " : ", row[1])
 
 
 def main():
@@ -179,20 +196,22 @@ def main():
         ['T400', ['2', '5']]
     ]
 
-    threshold = inputMinSup(data_set)
+    sup_threshold = inputMinSup(data_set)
+    conf_threshold = inputMinConf()
     candidates = generateCandidates(data_set)
     item_set_one, freq_set_one = firstIteration(
-        candidates, data_set, threshold)
+        candidates, data_set, sup_threshold)
     item_set_two, freq_set_two = secondIteration(
-        freq_set_one, data_set, threshold)
+        freq_set_one, data_set, sup_threshold)
     item_set_three, freq_set_three = thirdIteration(
-        freq_set_two, data_set, threshold)
+        freq_set_two, data_set, sup_threshold)
+    candidate_rules = generateCandidateRules(freq_set_three, data_set)
 
     while True:
         os.system("cls")
         choice = showMenuOptions()
         if (choice == 1):
-            print(data_set)
+            displayDataSet(data_set)
             input("\n\nEnter to continue")
             continue
         elif (choice == 2):
@@ -214,11 +233,17 @@ def main():
             input("\n\nEnter to continue")
             continue
         elif (choice == 6):
-            generateCandidateRules(freq_set_three, data_set)
+            displayAssociationRules(candidate_rules, conf_threshold)
             input("\n\nEnter to continue")
             continue
         elif (choice == 7):
-
+            displayInitIteration(item_set_one, freq_set_one)
+            displayIteration(item_set_two, freq_set_two, 2)
+            displayIteration(item_set_three, freq_set_three, 3)
+            displayAssociationRules(candidate_rules, conf_threshold)
+            input("\n\nEnter to continue")
+            continue
+        elif (choice == 8):
             break
         else:
             print("\nError : the choice does not exist, please try again...")
