@@ -188,7 +188,6 @@ def displayDataSet(data_set):
 
 
 def main():
-    threshold = 2
     data_set = [
         ['T100', ['1', '3', '4']],
         ['T200', ['2', '3', '5']],
